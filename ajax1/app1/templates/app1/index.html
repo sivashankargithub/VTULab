@@ -1,0 +1,34 @@
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<form method="POST" id="myform">
+    {% csrf_token %}
+    {{form.as_p}}
+    <button type="submit">SUBMIT</button>    
+</form>
+<div id="ajax-response"></div>
+<script>
+$(document)
+.ready(function(event) {
+    $('#myform')
+    .submit(function(event) {
+        event.preventDefault();
+        var data1=$(this).serialize();
+        $.ajax({
+            url: '{% url "home2" %}',
+            type:"POST",
+            data:data1,
+            success:function(response){
+                if(response.param1){
+                    var out1="<h1>Permutation of Words</h1>";
+                    for(let i=0; i<response.param1.length; i++){
+                        out1+="<p>"+response.param1[i]+"</p>";
+                    }
+                    $("#ajax-response").html(out1);
+                }
+            },
+            error: function(xhr, status, error){
+                console.error("Error:",error);
+            }
+        });
+    });
+});
+</script>
